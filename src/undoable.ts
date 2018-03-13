@@ -74,12 +74,15 @@ export class Undoable <T=any> {
   private snapshot : T;
   private changes  : IUndoableChange<T>[];
 
+  maxChanges : number;
+
   /**
   * Constructor for this undoable class.
   */
-  constructor (snapshot: T, changes : IUndoableChange<T>[] = []) {
-    this.snapshot = snapshot;
-    this.changes = changes;
+  constructor (snapshot: T, changes : IUndoableChange<T>[] = [], maxChanges : number = Infinity) {
+    this.snapshot   = snapshot;
+    this.changes    = changes;
+    this.maxChanges = maxChanges;
   }
 
   /**
@@ -135,7 +138,15 @@ export class Undoable <T=any> {
     if(current === v)
       return;
 
+    const
+    changeCount : number = (this.changeCount + 1),
+    maxChanges  : number = this.maxChanges;
+
+    if(maxChanges >= 0 && changeCount > maxChanges) // auto commmit difference in steps
+      this.commit(changeCount - maxChanges)
+
     this.changes.push({ leftSide: current, rightSide: v });
+
     return;
   }
 
@@ -154,9 +165,11 @@ export class Undoable <T=any> {
   /**
   * Apply all recent changes into a snapshot. Returns all changes committed.
   */
-  commit() : IUndoableChange<T>[] {
-    this.snapshot = this.current;
-    return this.changes.splice(0, this.changeCount);
+  commit(steps : number = this.changeCount) : IUndoableChange<T>[] {
+    steps = Math.max(0, Math.min(steps, this.changeCount));
+    if(steps === 0) return [];
+    this.snapshot = this.changes[steps - 1].rightSide;
+    return this.changes.splice(0, steps);
   }
 
   /**

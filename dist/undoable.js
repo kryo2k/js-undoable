@@ -53,9 +53,10 @@ class Undoable {
     /**
     * Constructor for this undoable class.
     */
-    constructor(snapshot, changes = []) {
+    constructor(snapshot, changes = [], maxChanges = Infinity) {
         this.snapshot = snapshot;
         this.changes = changes;
+        this.maxChanges = maxChanges;
     }
     /**
     * Build a map of all unique references. This is to be used as a dictionary for exporting.
@@ -97,6 +98,9 @@ class Undoable {
         let current = this.current;
         if (current === v)
             return;
+        const changeCount = (this.changeCount + 1), maxChanges = this.maxChanges;
+        if (maxChanges >= 0 && changeCount > maxChanges)
+            this.commit(changeCount - maxChanges);
         this.changes.push({ leftSide: current, rightSide: v });
         return;
     }
@@ -110,9 +114,12 @@ class Undoable {
     /**
     * Apply all recent changes into a snapshot. Returns all changes committed.
     */
-    commit() {
-        this.snapshot = this.current;
-        return this.changes.splice(0, this.changeCount);
+    commit(steps = this.changeCount) {
+        steps = Math.max(0, Math.min(steps, this.changeCount));
+        if (steps === 0)
+            return [];
+        this.snapshot = this.changes[steps - 1].rightSide;
+        return this.changes.splice(0, steps);
     }
     /**
     * Exports the current state to a buffer object. Can be reimported

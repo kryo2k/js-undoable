@@ -9,10 +9,11 @@ export interface IUndoableChange<T = any> {
 export declare class Undoable<T = any> {
     private snapshot;
     private changes;
+    maxChanges: number;
     /**
     * Constructor for this undoable class.
     */
-    constructor(snapshot: T, changes?: IUndoableChange<T>[]);
+    constructor(snapshot: T, changes?: IUndoableChange<T>[], maxChanges?: number);
     /**
     * Build a map of all unique references. This is to be used as a dictionary for exporting.
     */
@@ -35,7 +36,7 @@ export declare class Undoable<T = any> {
     /**
     * Apply all recent changes into a snapshot. Returns all changes committed.
     */
-    commit(): IUndoableChange<T>[];
+    commit(steps?: number): IUndoableChange<T>[];
     /**
     * Exports the current state to a buffer object. Can be reimported
     * using Undoable.fromBuffer<T>(...);

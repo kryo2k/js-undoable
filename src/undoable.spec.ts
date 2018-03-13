@@ -47,4 +47,13 @@ describe('Undoable<string>', () => {
     expect(undoStr.current).to.be.eq(TEST_1);
     expect(undoStr.changeCount).to.be.eq(0);
   });
+
+  it('should respect max steps', () => {
+    let undoStr = new Undoable<string>(TEST_1, [], 1);
+    undoStr.current = TEST_2;
+    undoStr.current = TEST_3;
+
+    expect(undoStr.current).to.be.eq(TEST_3);
+    expect(undoStr.changeCount).to.be.eq(1);
+  })
 });
