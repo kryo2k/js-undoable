@@ -80,6 +80,10 @@ export class Undoable <T=any> {
   * Constructor for this undoable class.
   */
   constructor (snapshot: T, changes : IUndoableChange<T>[] = [], maxChanges : number = Infinity) {
+
+    if(changes.length > maxChanges)
+      throw new RangeError('Changes length exceeds max changes allowed setting.');
+
     this.snapshot   = snapshot;
     this.changes    = changes;
     this.maxChanges = maxChanges;
