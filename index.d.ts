@@ -29,6 +29,7 @@ export declare class Undoable<T = any> {
     * Update the current value defined
     */
     current: T;
+    integrityTest(): boolean;
     /**
     * Undo any number of steps.
     */

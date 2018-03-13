@@ -154,6 +154,23 @@ export class Undoable <T=any> {
     return;
   }
 
+  integrityTest() : boolean {
+    const changeCount = this.changeCount;
+    let   lastVal     = this.snapshot, index = 0;
+
+    while(index < changeCount) {
+      let change = this.changes[index];
+
+      if(change.leftSide !== lastVal)
+        return false;
+
+      lastVal = change.rightSide;
+      index++;
+    }
+
+    return true;
+  }
+
   /**
   * Undo any number of steps.
   */
