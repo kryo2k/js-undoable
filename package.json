@@ -1,6 +1,6 @@
 {
   "name": "js-undoable",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Typescript undoable class.",
   "main": "node index.js",
   "scripts": {
