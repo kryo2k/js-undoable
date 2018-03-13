@@ -252,7 +252,7 @@ export class Undoable <T=any> {
   /**
   * Load undoable from an exported buffer.
   */
-  static fromBuffer <T=any>(buf: Buffer) : Undoable<T> {
+  static fromBuffer <T=any>(buf: Buffer, reviver ?: ((key: string, value: any) => any)) : Undoable<T> {
     const bufferLength = buf.length;
     if(bufferLength < UINTSIZE)
       throw new RangeError('Buffer is empty or invalid.');
@@ -293,7 +293,7 @@ export class Undoable <T=any> {
     // 2) read and decode each reference into a new reference array
     const references : { [key: number] : T } = [];
     for(let i=0; i < refsCount; i++)
-      references[i] = JSON.parse(readStr(readUInt(), 'utf8')) as T;
+      references[i] = JSON.parse(readStr(readUInt(), 'utf8'), reviver) as T;
     // 2) check.
 
     // 3) read reference and link to snapshot
