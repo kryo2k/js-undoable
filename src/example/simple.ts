@@ -1,4 +1,4 @@
-import { Undoable } from 'js-undoable';
+import { Undoable } from '../undoable';
 
 let undoNum = new Undoable<number>(25);
 undoNum.current = 26;

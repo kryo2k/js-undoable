@@ -1,11 +1,11 @@
 {
   "name": "js-undoable",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Typescript undoable class.",
   "main": "node index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p tsconfig.json && mv dist/undoable.d.ts index.d.ts"
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "build": "tsc -p tsconfig.json && cp dist/undoable.d.ts index.d.ts"
   },
   "keywords": [
     "undo",
@@ -18,8 +18,11 @@
     "url": "https://github.com/kryo2k/js-undoable.git"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/mocha": "^2.2.48",
     "@types/node": "^9.4.6",
-    "mocha": "^5.0.1",
+    "chai": "^4.1.2",
+    "mocha": "^5.0.4",
     "ts-node": "^3.3.0",
     "typescript": "^2.7.2"
   },

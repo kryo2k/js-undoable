@@ -217,3 +217,4 @@ class Undoable {
 }
 exports.Undoable = Undoable;
 ;
+//# sourceMappingURL=undoable.js.map
