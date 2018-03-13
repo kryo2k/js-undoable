@@ -54,6 +54,8 @@ class Undoable {
     * Constructor for this undoable class.
     */
     constructor(snapshot, changes = [], maxChanges = Infinity) {
+        if (changes.length > maxChanges)
+            throw new RangeError('Changes length exceeds max changes allowed setting.');
         this.snapshot = snapshot;
         this.changes = changes;
         this.maxChanges = maxChanges;
@@ -174,7 +176,7 @@ class Undoable {
     /**
     * Load undoable from an exported buffer.
     */
-    static fromBuffer(buf) {
+    static fromBuffer(buf, reviver) {
         const bufferLength = buf.length;
         if (bufferLength < UINTSIZE)
             throw new RangeError('Buffer is empty or invalid.');
@@ -202,7 +204,7 @@ class Undoable {
         // 2) read and decode each reference into a new reference array
         const references = [];
         for (let i = 0; i < refsCount; i++)
-            references[i] = JSON.parse(readStr(readUInt(), 'utf8'));
+            references[i] = JSON.parse(readStr(readUInt(), 'utf8'), reviver);
         // 2) check.
         // 3) read reference and link to snapshot
         const snapshot = references[readUInt()];

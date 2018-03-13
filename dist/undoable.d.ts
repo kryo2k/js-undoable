@@ -45,5 +45,5 @@ export declare class Undoable<T = any> {
     /**
     * Load undoable from an exported buffer.
     */
-    static fromBuffer<T = any>(buf: Buffer): Undoable<T>;
+    static fromBuffer<T = any>(buf: Buffer, reviver?: ((key: string, value: any) => any)): Undoable<T>;
 }
